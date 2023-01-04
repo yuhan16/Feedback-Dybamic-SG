@@ -4,11 +4,11 @@ close all
 clearvars
 
 rng(75984)
-dimS = 8;
+dimS = 20;
 dimA = 7;
 dimB = 5;
-T = 200;
-gam = 0.99;
+T = 100;
+gam = 0.9;
 ua = 10*rand(dimS, dimA, dimB);    % stage cost
 ub = 10*rand(dimS, dimA, dimB);
 uaf = rand(dimS, 1);            % terminal cost

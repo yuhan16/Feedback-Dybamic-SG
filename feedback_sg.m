@@ -1,5 +1,7 @@
-% This script computes feedback SG equilibrium in discrete settings.
+% this script compute feedback SG equilibrium use DP in discrete settings.
+% the purpose is to see if equilirbium becomes stationary as T -> inf
 % we use cost instead of reward.
+
 close all
 clearvars
 
@@ -33,6 +35,7 @@ VB = cell(T+1, 1);
 x = cell(T, 1);
 y = cell(T, 1);
 
+% perform DP to compute feedback SG equilibrium
 for t = T+1: -1: 1
     % terminal cost
     if t == T+1
@@ -91,6 +94,7 @@ y{4}
 y{5}
 y{6}
 
+% plot value functions
 va = zeros(dimS, T+1);
 vb = zeros(dimS, T+1);
 for t = 1: T+1
@@ -102,13 +106,10 @@ hold on
 for i = 1: dimS
     plot(va(i, :))
 end
-% conclusion: the value and policy are stationary as time T to inf
-% for discounted cases. For non-discounted cases, the cost does not
-% converge unless there is an absorbing state.
 
 
 
-% auxiliary functions
+%========== auxiliary functions ==========%
 function [p] = normalize_p(p)
     % normalize the first dimension.
     [dimS, ~, dimA, dimB] = size(p);

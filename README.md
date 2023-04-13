@@ -13,8 +13,8 @@ The purposes are the following:
 
 The game is defined as follows.
 $$
-\min_{\pi^1 \in \Delta(|\mathcal{A^1}|), \pi^{2*}} \quad \mathbb{E}_{\pi^1, \pi^{2*}}\left[ \sum_{t=0}^T \gamma^t r^1(S_t, A^1_t, A^2_t) | S_0 = s \right] \\ 
-\text{s.t.} \quad \pi^{2*} \in \arg\min_{\pi^2 \in \Delta(|\mathcal{A^2}|)} \mathbb{E}_{\pi^1, \pi^{2}} \left[ \sum_{t=0}^T \gamma^t r^2(S_t, A^1_t, A^2_t) | S_0 = s \right], \\ 
+\min_{\pi^1 \in \Delta(|\mathcal{A}^1|), \pi^{2*}} \quad \mathbb{E}_{\pi^1, \pi^{2*}}\left[ \sum_{t=0}^T \gamma^t r^1(S_t, A^1_t, A^2_t) | S_0 = s \right] \\ 
+\text{s.t.} \quad \pi^{2*} \in \arg\min_{\pi^2 \in \Delta(|\mathcal{A}^2|)} \mathbb{E}_{\pi^1, \pi^{2}} \left[ \sum_{t=0}^T \gamma^t r^2(S_t, A^1_t, A^2_t) | S_0 = s \right], \\ 
 $$
 Here, $S_t, A^i_t$ are the state and actions at time $t$, which are random variables; $r^i$ is the stage cost functions. The transition probability is denoted by $p(s'|s,a^1, a^2)$. Note that we consider feedback strategies $\pi^i$, i.e., $\pi^i(\cdot | s)$ is a probability distribution over $\mathcal{A}^i$, $i \in \{1,2\}$. If $T$ is finite, the policy is non-stationary and is a sequence $\{ \pi^i_t(\cdot | s) \}_{t=0}^T$, $i \in \{ 1,2 \}$.
 
@@ -37,6 +37,7 @@ In MARL settings, people are interested in **stationary policies** under $T\to \
  - the follower's strategy is always deterministic.
  - the leader's strategy may not be deterministic due to the BR partition.
 - For non-discounted cases, the cost does not converge unless there is an absorbing state.
+
 
 [^1]: Paruchuri, Praveen, et al. "Playing games for security: An efficient exact algorithm for solving Bayesian Stackelberg games." Proceedings of the 7th international joint conference on Autonomous agents and multiagent systems-Volume 2. 2008.
 

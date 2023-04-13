@@ -1,5 +1,5 @@
 #import parameters as pm
-from sg_utils import DiscountedStackelbergGame
+from sg_utils import DiscountedStackelbergGame, PlotUtils
 
 def test():
     sg = DiscountedStackelbergGame()
@@ -8,10 +8,11 @@ def test():
 def main():
     s0 = 0  # first state
     sg = DiscountedStackelbergGame()
+    pltutil = PlotUtils()
 
     va, vb, pia, pib = sg.backward_dp()
-    sg.plot_value(va, vb, [0,2,3,4])
-    #sg.plot_policy(piA, piB, T)
+    pltutil.plot_value(va, vb, [0,2,3,4])
+    #pltutil.plot_policy(piA, piB, T)
 
 
 if __name__ == "__main__":

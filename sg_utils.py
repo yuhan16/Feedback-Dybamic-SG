@@ -1,7 +1,7 @@
 import numpy as np
 import gurobipy as gp
 from gurobipy import GRB
-import matplotlib as plt
+import matplotlib.pyplot as plt
 #import parameters as pm
 
 
@@ -10,10 +10,10 @@ class DiscountedStackelbergGame:
     This class defines a dynamic Stackelberg game and functions to computes feedback SG equilibrium.
     """
     def __init__(self) -> None:
-        self.rng = np.random.default_rng(7767)  # set seed manually
-        self.T = 10         # game horizon
+        self.rng = np.random.default_rng(123)  # set seed manually
+        self.T = 50         # game horizon
         self.gam = 0.9      # discounted factor
-        self.dims, self.dima, self.dimb = 10, 7, 5
+        self.dims, self.dima, self.dimb = 50, 10, 7
         self.ua = 10*self.rng.random((self.dims, self.dima, self.dimb))     # stage cost, ua(s,a,b)
         self.ub = 10*self.rng.random((self.dims, self.dima, self.dimb))
         self.uaf = self.rng.random(self.dims);      # terminal cost
@@ -42,6 +42,7 @@ class DiscountedStackelbergGame:
         vb[-1, :] = self.ubf
         
         for t in reversed(range(self.T)):
+            print('backward DP for stage ', t)
             for s in range(self.dims):
                 UA, UB = self.get_compact_cost_matrix(s, va[t+1, :], vb[t+1, :])
                 x, y = self.gurobi_MILP(UA, UB)
@@ -71,25 +72,29 @@ class DiscountedStackelbergGame:
         """
         try:
             model = gp.Model('sg-milp')
-            z = model.addMVar(shape=(self.dima, self.dimb), lb=0, ub=1, vtype=GRB.CONTINUOUS, name="z")
-            y = model.addMVar(shape=1, vtype=GRB.CONTINUOUS, name="y")
-            x = model.addMVar(shape=self.dimb, vtype=GRB.BINARY, name="x")
+            model.setParam('OutputFlag', 0)
+            z = model.addVars(self.dima, self.dimb, lb=0, ub=1, vtype=GRB.CONTINUOUS, name="z")
+            y = model.addVar(lb=-GRB.INFINITY, vtype=GRB.CONTINUOUS, name="y")
+            x = model.addVars(self.dimb, vtype=GRB.BINARY, name="x")
 
-            model.setObjective(sum(UA[i, :] @ z[i, :] for i in range(self.dima)), GRB.MINIMIZE)
-            model.addConstr(z.sum() == 1)
-            model.addConstrs(z[i, :].sum() <=1 for i in range(self.dima))
-            model.addConstrs(z[:, j].sum() >= x[j] for j in range(self.dimb))
-            model.addConstrs(z[:, j].sum() <= 1 for j in range(self.dimb))
+            model.setObjective(sum(sum(UA[i,j] * z[i,j] for i in range(self.dima)) for j in range(self.dimb)), GRB.MINIMIZE)
+            model.addConstr( z.sum() == 1 )
+            model.addConstrs( sum(z[i, j] for j in range(self.dimb)) <=1     for i in range(self.dima) )
+            model.addConstrs( sum(z[i, j] for i in range(self.dima)) >= x[j] for j in range(self.dimb) )
+            model.addConstrs( sum(z[i, j] for i in range(self.dima)) <= 1    for j in range(self.dimb) )
             model.addConstr(x.sum() == 1)
             for j in range(self.dimb):
-                model.addConstr( y-sum(UB.T[j, i]*z[i,:].sum() for i in range(self.dima) ) >= 0 )
-                model.addConstr( y-sum(UB.T[j, i]*z[i,:].sum() for i in range(self.dima)) <= self.big_M*(1-x[j]) )
-
+                model.addConstr( y-sum(UB.T[j, i]*sum(z[i, k] for k in range(self.dimb)) for i in range(self.dima) ) >= 0 )
+                model.addConstr( y-sum(UB.T[j, i]*sum(z[i, k] for k in range(self.dimb)) for i in range(self.dima)) <= self.bigM*(1-x[j]) )
             model.optimize()
 
             # get pia and pib
-            pia = z.X @ np.ones(self.dimb)
-            pib = x.X
+            ztmp, xtmp = np.zeros((self.dima, self.dimb)), np.zeros(self.dimb)
+            for j in range(self.dimb):
+                for i in range(self.dimb):
+                    ztmp[i, j] = z[i, j].X
+                xtmp[j] = x[j].X
+            pia, pib = ztmp @ np.ones(self.dimb), xtmp
             return pia, pib
 
         except gp.GurobiError as e:
@@ -105,7 +110,8 @@ class DiscountedStackelbergGame:
         """
         try:
             model = gp.Model("sg-miqp")
-            a = model.addMVar(shape=1, vtype=GRB.CONTINUOUS, name="a")
+            model.setParam('OutputFlag', 0)
+            a = model.addMVar(shape=1, lb=-GRB.INFINITY, vtype=GRB.CONTINUOUS, name="a")
             y = model.addMVar(shape=self.dima, lb=0, vtype=GRB.CONTINUOUS, name="y")
             x = model.addMVar(shape=self.dimb, vtype=GRB.BINARY, name="x")
 
@@ -115,7 +121,7 @@ class DiscountedStackelbergGame:
             model.addConstr(x.sum() == 1)
             for j in range(self.dimb):
                 model.addConstr( a - UB.T[j, :] @ y >= 0 )
-                model.addConstr( a - UB.T[j, :] @ y <= self.big_M*(1-x[j]) )
+                model.addConstr( a - UB.T[j, :] @ y <= self.bigM*(1-x[j]) )
 
             model.optimize()
 
@@ -136,7 +142,7 @@ class PlotUtils:
         pass
 
 
-    def plot_value(va, vb, s_list):
+    def plot_value(self, va, vb, s_list):
         """
         This function plots the both player's values of given states s_list.
         va[t,s]: leader's value at time t and state s
@@ -154,5 +160,5 @@ class PlotUtils:
 
     def plot_policy(pia, pib, T):
         """
-        This function plots the policies of A and B along the interaction horizon.
+        This function plots the policies.
         """

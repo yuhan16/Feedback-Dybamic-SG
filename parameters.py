@@ -1,3 +1,7 @@
+"""
+More complex models can be defined here. 
+Use constructor to load the model.
+"""
 import numpy as np
 
 rng = np.random.default_rng(12345)

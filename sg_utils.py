@@ -10,6 +10,9 @@ class DiscountedStackelbergGame:
     This class defines a dynamic Stackelberg game and functions to computes feedback SG equilibrium.
     """
     def __init__(self) -> None:
+        """
+        Define game settings. Or load the definition in parameters.py. 
+        """
         self.rng = np.random.default_rng(123)  # set seed manually
         self.T = 50         # game horizon
         self.gam = 0.9      # discounted factor

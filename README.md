@@ -13,8 +13,10 @@ The purposes are the following:
 
 The game is defined as follows.
 $$
+\begin{align*}
 \min_{\pi^1 \in \Delta(|\mathcal{A}^1|), \pi^{2*}} \quad \mathbb{E}_{\pi^1, \pi^{2*}}\left[ \sum_{t=0}^T \gamma^t r^1(S_t, A^1_t, A^2_t) | S_0 = s \right] \\ 
 \text{s.t.} \quad \pi^{2*} \in \arg\min_{\pi^2 \in \Delta(|\mathcal{A}^2|)} \mathbb{E}_{\pi^1, \pi^{2}} \left[ \sum_{t=0}^T \gamma^t r^2(S_t, A^1_t, A^2_t) | S_0 = s \right], \\ 
+\end{align*}
 $$
 Here, $S_t, A^i_t$ are the state and actions at time $t$, which are random variables; $r^i$ is the stage cost functions. The transition probability is denoted by $p(s'|s,a^1, a^2)$. Note that we consider feedback strategies $\pi^i$, i.e., $\pi^i(\cdot | s)$ is a probability distribution over $\mathcal{A}^i$, $i \in \{1,2\}$. If $T$ is finite, the policy is non-stationary and is a sequence $\{ \pi^i_t(\cdot | s) \}_{t=0}^T$, $i \in \{ 1,2 \}$.
 

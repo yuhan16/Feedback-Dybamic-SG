@@ -15,8 +15,8 @@ The game is defined as follows.
 
 $$
 \begin{align*}
-\min_{\pi^1 \in \Delta(|\mathcal{A}^1|), \pi^{2*}} \quad \mathbb{E}_{\pi^1, \pi^{2*}}\left[ \sum_{t=0}^T \gamma^t r^1(S_t, A^1_t, A^2_t) | S_0 = s \right] \\ 
-\text{s.t.} \quad \pi^{2*} \in \arg\min_{\pi^2 \in \Delta(|\mathcal{A}^2|)} \mathbb{E}_{\pi^1, \pi^{2}} \left[ \sum_{t=0}^T \gamma^t r^2(S_t, A^1_t, A^2_t) | S_0 = s \right], \\ 
+\min_{\pi^1 \in \Delta(|\mathcal{A}^1|), \pi^{2*}} \quad & \mathbb{E}_{\pi^1, \pi^{2*}}\left[ \sum_{t=0}^T \gamma^t r^1(S_t, A^1_t, A^2_t) | S_0 = s \right] \\ 
+\text{s.t.} \quad & \pi^{2*} \in \arg\min_{\pi^2 \in \Delta(|\mathcal{A}^2|)} \mathbb{E}_{\pi^1, \pi^{2}} \left[ \sum_{t=0}^T \gamma^t r^2(S_t, A^1_t, A^2_t) | S_0 = s \right], \\ 
 \end{align*}
 $$
 
@@ -25,10 +25,14 @@ Here, $S_t, A^i_t$ are the state and actions at time $t$, which are random varia
 
 ### Methods
 For finite horizon SG, we can use dynamic programming to compute feedback SG equilibrium. At stage $t$, we have a bilevel optimization problem, specifically a bilinear problem:
+
 $$
-\min_{x,y^*} \quad x^T U y \\
-\text{s.t.} \quad y^* = \arg\min_y x^T V y,
+\begin{align*}
+\min_{x,y^*} \quad & x^T U y \\
+\text{s.t.} \quad & y^* = \arg\min_y x^T V y,
+\end{align*}
 $$ 
+
 where $x,y$ are policies and $U,V$ are accumulated cost. We use KKT conditions to eliminate the lower-level problem and reformulate it into a mixed-integer linear programming (see [^1], [^2]). Using existing integer solvers such as Gurobi, we can compute the feedback SG equilibrium backward.
 
 

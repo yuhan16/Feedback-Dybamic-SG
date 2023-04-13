@@ -28,8 +28,8 @@ For finite horizon SG, we can use dynamic programming to compute feedback SG equ
 
 $$
 \begin{align*}
-\min_{x, y^*} \quad & x^T U y \\
-\text{s.t.} \quad & y^* = \arg\min_{y} x^T V y,\\
+\min_{x, y^{*}} \quad & x^{T} U y \\
+\text{s.t.} \quad & y^{*} = \arg\min_{y} x^{T} V y,\\
 \end{align*}
 $$ 
 

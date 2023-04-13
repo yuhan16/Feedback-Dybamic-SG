@@ -26,12 +26,6 @@ Here, $S_t, A^i_t$ are the state and actions at time $t$, which are random varia
 ### Methods
 For finite horizon SG, we can use dynamic programming to compute feedback SG equilibrium. At stage $t$, we have a bilevel optimization problem, specifically a bilinear problem:
 
-$$
-\begin{align*}
-\min_{x, y^{*}} \quad & x^T U y \\
-\text{s.t.} \quad & y^{*} = \arg \min_{y} x^T V y,
-\end{align*}
-$$ 
 
 where $x,y$ are policies and $U,V$ are accumulated cost. We use KKT conditions to eliminate the lower-level problem and reformulate it into a mixed-integer linear programming (see [^1], [^2]). Using existing integer solvers such as Gurobi, we can compute the feedback SG equilibrium backward.
 

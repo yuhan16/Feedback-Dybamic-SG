@@ -47,6 +47,10 @@ In MARL settings, people are interested in **stationary policies** under $T\to \
 - For non-discounted cases, the cost does not converge unless there is an absorbing state.
 
 
+### Gurobi installation
+Python scripts need Gurobi to solve mixed integer programming in the SG. Please visit [Gurobi website](https://www.gurobi.com/) for installation and license request. 
+
+
 [^1]: Paruchuri, Praveen, et al. "Playing games for security: An efficient exact algorithm for solving Bayesian Stackelberg games." Proceedings of the 7th international joint conference on Autonomous agents and multiagent systems-Volume 2. 2008.
 
 [^2]: Zhao, Yuhan, et al. "Stackelberg strategic guidance for heterogeneous robots collaboration." 2022 International Conference on Robotics and Automation (ICRA). IEEE, 2022.
